@@ -6,7 +6,7 @@ const mongoose = require('mongoose') // importei o mongoose
 const Pessoa = mongoose.model('Pessoa',{
     nome: String,
     cargo: String,
-    dtNasc: Date,
+    dtNasc: String,
     endereco: String
 
 })
