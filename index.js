@@ -15,11 +15,11 @@ app.use(
 app.use(express.json())
 
 //rotas da API
-const pessoasRoutes = require('./routes/pessoasroutes')
-app.use('/cadastro', pessoasRoutes)
+const funcionarioRoutes = require('./routes/funcionarioroutes')
+app.use('/cadastro', funcionarioRoutes)
 
 //rota inicial / endpoint 
-app.get('/home', (req, res) => { //requisição de buscar
+app.get('/', (req, res) => { //requisição de buscar
     //mostrar req
     res.json({ message: "funcionou a busca" }) //minha respota para minha requisição '/' vai ser em json
 })
