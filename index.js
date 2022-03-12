@@ -1,36 +1,66 @@
-
-const mongoose = require('mongoose')
 //config inicial
-
+const mongoose = require('mongoose')
 const express = require('express')
 const app = express()
+const Pessoa = require('./models/Pessoa') //acessando meu model
+
+
 
 // forma de ler json / middl
-
 app.use(
     express.urlencoded({
         extended: true,
     })
 )
-
 app.use(express.json())
 
 //rota inicial / endpoint 
-app.get('/edmilson', (req, res) => {
+//rotas da API
+app.post('/cadastro',async (req, res) =>{ //pq vou enviar dados 
+    //uso async pq tenho que esperar o tempo x para chegar os dados
+
+    //req.body o que eu espero que venha {nome:"diogo", cargo:"café", dtNasc: 2001-06-14}
+    const{nome, cargo, dtNasc, endereco} = req.body //criei 3 variaveis com o descontruindo o body
+    
+    //crio um objeto com todos os atributos que eu estrai da requisição
+    const pessoa = {
+        nome,
+        cargo,
+        endereco,
+        dtNasc
+    }
+
+    //adicionando uma entidade ao meu banco de dados
+    
+    //para fazer isso utilizo o try/catch pois a requisição pode falhar
+    try{
+        //vou esperar a requisiação terminar e crio meu dados com o objeto criado acima
+        await Pessoa.create(pessoa)
+        console.log("Dados inserido com sucesso")
+        res.status(201).json({message: 'Funcionario inserido com sucesso'}) //dado criado com sucesso
+
+    }catch(error){
+        res.status(500).json({error: error}) //se houver algum error de servidor
+    }
+
+})
+
+app.get('/home', (req, res) => {
     //requisição de buscar
 
     //mostrar req
     res.json({ message: "funcionou a busca" }) //minha respota para minha requisição '/' vai ser em json
 })
 
-// entregar uma porta
 
+
+// entregar uma porta
 const DB_USER = 'diogolimalucas'
 const DB_PASSWORD = encodeURIComponent("12345")
-//mongodb+srv://diogolimalucas:25082009@apibackendapp.z8eom.mongodb.net/apiBackendapp?retryWrites=true&w=majority
+
 
 mongoose.
-    connect(`mongodb+srv://diogolimalucas:<12345>@apibackendapp.z8eom.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`)
+    connect(`mongodb+srv://${DB_USER}:${DB_PASSWORD}@apibackendapp.z8eom.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`)
     .then(() => {  //quando a conexão da certo
         console.log("200, conectado ao MongoDb")
         app.listen(3000) //escutar a porta 3000
