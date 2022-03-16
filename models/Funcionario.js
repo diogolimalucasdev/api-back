@@ -7,7 +7,11 @@ const Funcionario = mongoose.model('Funcionario',{
     nome: String,
     cargo: String,
     dtNasc: String,
-    endereco: String
+    endereco: Object,
+    telefone: Number,
+    senha: String,
+    login: String
+
 
 })
 module.exports = Funcionario //exportando o meu model Funcionario

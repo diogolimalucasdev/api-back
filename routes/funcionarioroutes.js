@@ -1,3 +1,8 @@
+//impotações
+import validator from "validar-telefone";
+
+
+
 const router = require('express').Router()
 const Funcionario = require('../models/Funcionario')
 const Pessoa = require('../models/Funcionario') //acessando meu model
@@ -6,23 +11,88 @@ router.post('/', async (req, res) => { //pq vou enviar dados
     //uso async pq tenho que esperar o tempo x para chegar os dados
 
     //req.body o que eu espero que venha {nome:"diogo", cargo:"café", dtNasc: 2001-06-14}
-    const { nome, cargo, dtNasc, endereco } = req.body //criei 3 variaveis com o descontruindo o body
+    const { nome, cargo, dtNasc, telefone, senha, cep, rua, numero, bairro, cidade, estado } = req.body //criei 3 variaveis com o descontruindo o body
 
 
     //criando validações
-
+    
+    //nome
     if (!nome) {
-        res.status(422).json({ error: 'o nome é obrigatorio!' }) //quando o recurso nao foi criado com sucesso
+        res.status(400).json({ error: 'O nome é obrigatorio!' }) //quando o recurso nao foi criado com sucesso
     }
 
+
+    //cargo
+    if (!cargo) {
+        res.status(400).json({ error: 'O cargo é obrigatorio!' }) //quando o recurso nao foi criado com sucesso
+    }
+
+    //data de nascimento
+    if (!dtNasc) {
+        res.status(400).json({ error: 'É obrigatorio informar a idade' }) //quando o recurso nao foi criado com sucesso
+    }
+    else{
+        var dataAtual = new Date()
+
+        var dataUser = new Date(dtNasc)
+
+        var verificaIdade = verificaIdade(dataUser)
+
+        function verificaIdade(dataUser = new Date()) {
+            var dataAtual = new Date()
+            if ((dataAtual.getFullYear() - dataUser.getFullYear() == 18)) {
+                if ((dataUser.getMonth() + 1) >= (dataAtual.getMonth() + 1)) {
+                    if ((dataUser.getDate() > dataAtual.getDate())) {
+                        res.status(400).json({ error: 'O funcionario nao pode ser menor de idade' })
+                    }
+                }
+            } else if ((dataAtual.getFullYear() - dataUser.getFullYear() < 18)) {
+                res.status(400).json({ error: 'O funcionario nao pode ser menor de idade' })
+            }
+        }
+    }
+
+    //telefone
+    if(!validator(telefone) ){
+        res.status(400).json({ error: 'É necessario um telefone válido!' })
+    }
+
+    //senha : sem validação, criação do usuario
+    if(!senha ){
+        res.status(400).json({ error: 'É obrigatorio uma senha!' })
+    }
+    //cep
+
+
+
+
+
+
+
     //crio um objeto com todos os atributos que eu estrai da requisição
-    let data = new Date("06 14 2001 ");
-    let dataFormatada = (data.getFullYear() + "-" + ((data.getMonth() + 1)) + "-" + (data.getDate()));
+    // let data = new Date("06 14 2001 ");
+    // let dataFormatada = (data.getFullYear() + "-" + ((data.getMonth() + 1)) + "-" + (data.getDate()));
+
+    let nomeCompleto = nome.split(" ")
+    let login = `${nomeCompleto[0]}.${nomeCompleto[1]}`
+
+    let endereco = {
+        cep,
+        rua,
+        numero,
+        bairro,
+        cidade,
+        estado
+    }
+
     const funcionario = {
         nome,
         cargo,
         endereco,
-        dtNasc
+        dtNasc,
+        telefone,
+        senha,
+        login
     }
 
     //adicionando uma entidade ao meu banco de dados

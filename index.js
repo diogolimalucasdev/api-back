@@ -27,12 +27,13 @@ app.get('/', (req, res) => { //requisição de buscar
 
 
 // entregar uma porta
-const DB_USER = 'diogolimalucas'
-const DB_PASSWORD = encodeURIComponent("12345")
-mongoose.
-    connect(`mongodb+srv://${DB_USER}:${DB_PASSWORD}@apibackendapp.z8eom.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`)
-    .then(() => {  //quando a conexão da certo
-        console.log("200, conectado ao MongoDb")
-        app.listen(3000) //escutar a porta 3000
-    })
-    .catch((err) => console.log(err)) // quando a conexão nao foi estabelecida
+// const DB_USER = 'diogolimalucas'
+// const DB_PASSWORD = encodeURIComponent("12345")
+// mongoose.
+//     connect(`mongodb+srv://${DB_USER}:${DB_PASSWORD}@apibackendapp.z8eom.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`)
+//     .then(() => {  //quando a conexão da certo
+//         console.log("200, conectado ao MongoDb")
+//         app.listen(3000) //escutar a porta 3000
+//     })
+//     .catch((err) => console.log(err)) // quando a conexão nao foi estabelecida
+app.listen(3000) //escutar a porta 3000
