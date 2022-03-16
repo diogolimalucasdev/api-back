@@ -52,17 +52,26 @@ router.post('/', async (req, res) => { //pq vou enviar dados
         }
     }
 
-    //telefone
+    //telefone utlizo uma biblioteca para validar o telefone
     if(!validator(telefone) ){
         res.status(400).json({ error: 'É necessario um telefone válido!' })
     }
 
     //senha : sem validação, criação do usuario
     if(!senha ){
-        res.status(400).json({ error: 'É obrigatorio uma senha!' })
+        res.status(400).json({ error: 'É obrigatorio uma senha!' }) //colocar um minimo de caracter
     }
+    
     //cep
+    if(!cep){
+        res.status(400).json({ error: 'É obrigatorio um cep válido!' })
+    }
 
+    //bairro
+    if(!bairro){
+        res.status(400).json({ error: 'É obrigatorio escre' })
+    }
+    
 
 
 
