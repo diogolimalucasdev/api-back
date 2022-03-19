@@ -147,13 +147,14 @@ router.get('/funcionarios/:id', async(req, res) =>{ //buscar funcionarios pelo i
     
     //extrair o dado da requisição
     const id = req.params.id
-    if (!mongoose.Types.isValid(id)) return Error({ status: 422 })  //tento transformar em um objeto id aqui
+    if (!mongooseisValidObjectId(id)) return Error({ status: 422 })  //tento transformar em um objeto id aqui
+
 
     //console.log("busca id")
     try{
         const funcionario = await Funcionario.findOne({_id: id}) //porcurando no meu banco o funcionario pelo id
         res.status(200).json(funcionario)
-
+        
         if(!funcionario){
             res.status(400).json({message: "funcionario nao encontrado"})
             return
@@ -173,7 +174,7 @@ router.patch('/atualizar/:id', async(req, res) =>{
     console.log("entrou aq")
     //extrair o dado da requisição
     const id = req.params.id
-    if (!mongoose.Types.isValid(id)) return Error({ status: 422 }) ////tento transformar em um objeto id aqui
+    if (!mongoose.isValidObjectId(id)) return Error({ status: 422 }) ////tento transformar em um objeto id aqui
 
     const { nome, cargo, dtNasc, telefone, senha, cep, rua, numero, bairro, cidade, estado } = req.body
 
@@ -220,15 +221,18 @@ router.patch('/atualizar/:id', async(req, res) =>{
 
 router.delete("/deletar/:id", async(req, res) =>{
     const id =  req.params.id
-    if (!mongoose.Types.isValid(id)) return Error({ messae: "error"}) ////tento transformar em um objeto id aqui
-
+    
     const funcionario = await Funcionario.findOne({_id: id}) //procurando no meu banco o funcionario pelo id
     if(!funcionario){
         res.status(400).json({message: "funcionario nao encontrado"})
         return
     }
+    if (!mongoose.isValidObjectId(id)) return Error({ messae: "error"}) ////tento transformar em um objeto id aqui
+
 
     try{
+
+        
         await Funcionario.deleteOne({_id:id})
         res.status(200).json({message: "Funcionario excluido com sucesso!"})
 
