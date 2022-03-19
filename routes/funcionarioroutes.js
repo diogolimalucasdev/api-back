@@ -1,13 +1,12 @@
 //impotações
-import validator from "validar-telefone";
+//import validator from "validar-telefone";
 
 
 
 const router = require('express').Router()
-const Funcionario = require('../models/Funcionario')
-const Pessoa = require('../models/Funcionario') //acessando meu model
+const Funcionario = require('../models/Funcionario')//acessando meu model
 
-router.post('/', async (req, res) => { //pq vou enviar dados 
+router.post('/cadastrar', async (req, res) => { //pq vou enviar dados 
     //uso async pq tenho que esperar o tempo x para chegar os dados
 
     //req.body o que eu espero que venha {nome:"diogo", cargo:"café", dtNasc: 2001-06-14}
@@ -36,9 +35,9 @@ router.post('/', async (req, res) => { //pq vou enviar dados
 
         var dataUser = new Date(dtNasc)
 
-        var verificaIdade = verificaIdade(dataUser)
+        var verificaIdade = verificaIdades(dataUser)
 
-        function verificaIdade(dataUser = new Date()) {
+        function verificaIdades(dataUser = new Date()) {
             var dataAtual = new Date()
             if ((dataAtual.getFullYear() - dataUser.getFullYear() == 18)) {
                 if ((dataUser.getMonth() + 1) >= (dataAtual.getMonth() + 1)) {
@@ -53,9 +52,9 @@ router.post('/', async (req, res) => { //pq vou enviar dados
     }
 
     //telefone utlizo uma biblioteca para validar o telefone
-    if(!validator(telefone) ){
-        res.status(400).json({ error: 'É necessario um telefone válido!' })
-    }
+    // if(!validator(telefone) ){
+    //     res.status(400).json({ error: 'É necessario um telefone válido!' })
+    // }
 
     //senha : sem validação, criação do usuario
     if(!senha ){
@@ -119,15 +118,32 @@ router.post('/', async (req, res) => { //pq vou enviar dados
 })
 
 //leitura de dados
-router.get('/', async (req, res) => {
+router.get('/funcionarios', async (req, res) => {
+    //console.log("chegou ate aqui")
     try {
-        const pessoas = await Pessoa.find() // buscar meus dados
+        const funcionario = await Funcionario.find() // buscar meus dados
 
-        res.status(200).json(pessoas)
+        res.status(200).json(funcionario)
 
     } catch (error) {
         res.status(500).json({ error: error }) //se houver algum error de servidor
     }
+})
+
+router.get('/funcionarios/:id', async(req, res) =>{ //buscar funcionarios pelo id
+    
+    //extrair o dado da requisição
+    const id = req.params.id
+
+
+    try{
+        const funcionario = await Funcionario.findOne({_id: id}) //porcurando no meu banco o funcionario pelo id
+        res.status(200).json(funcionario)
+
+    }catch(error){
+        res.status(500).json({ error: error })
+    }
+
 })
 
 module.exports = router
