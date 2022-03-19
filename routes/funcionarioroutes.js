@@ -147,7 +147,7 @@ router.get('/funcionarios/:id', async(req, res) =>{ //buscar funcionarios pelo i
     
     //extrair o dado da requisição
     const id = req.params.id
-    if (!mongooseisValidObjectId(id)) return Error({ status: 422 })  //tento transformar em um objeto id aqui
+    if (!mongoose.isValidObjectId(id)) return Error({ status: 422 })  //tento transformar em um objeto id aqui
 
 
     //console.log("busca id")
