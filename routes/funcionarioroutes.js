@@ -106,11 +106,11 @@ router.post('/cadastrar', async (req, res) => { //pq vou enviar dados
     const funcionario = {
         nome,
         cargo,
-        endereco,
         dtNasc,
         telefone,
         senha,
-        login
+        login,
+        endereco
     }
 
     //adicionando uma entidade ao meu banco de dados
