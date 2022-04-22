@@ -166,6 +166,31 @@ router.get('/funcionarios/:id', async(req, res) =>{ //buscar funcionarios pelo i
     }
 })
 
+//login do usuario
+router.post('/login', async (req, res) => { 
+    console.log("entrou no Login")
+
+     //pego a senha e o login inserido pelo usuario
+    const {login, senha} = req.body
+   
+    //busco no meu banco o login que foi cadastrado anteriormente pelo usuario
+    const funcionario = await Funcionario.findOne({login}).select('+senha')
+
+    //faço a validação pra ve se existe o funcionario
+    if(!funcionario){
+        return res.status(400).json({message: "Funcionario nao encontrado"})
+    }
+
+    //verifico se a senha digitada pelo funcionario é diferente do que esta no banco
+    if(await senha != funcionario.senha){
+        return res.status(400).json({message: "Senha Invalida"})
+    }
+
+    res.send({funcionario})
+    console.log("Entrou")
+
+})
+
 
 //atualização de dados(PUT, PATCH)
 
