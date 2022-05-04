@@ -26,6 +26,9 @@ app.get('/', (req, res) => { //requisição de buscar
 
 
 
+
+
+
 // entregar uma porta
 const DB_USER = 'diogolimalucas'
 const DB_PASSWORD = encodeURIComponent("12345")

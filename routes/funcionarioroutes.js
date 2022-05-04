@@ -11,8 +11,8 @@ router.post('/cadastrar', async (req, res) => { //pq vou enviar dados
     //uso async pq tenho que esperar o tempo x para chegar os dados
 
     //req.body o que eu espero que venha {nome:"diogo", cargo:"café", dtNasc: 2001-06-14}
-    const { nome, cargo, dtNasc, telefone, senha, cep, rua, numero, bairro, cidade, estado } = req.body //criei 3 variaveis com o descontruindo o body
-
+    // const { nome, cargo, dtNasc, telefone, senha, cep, rua, numero, bairro, cidade, estado } = req.body //criei 3 variaveis com o descontruindo o body
+    const { nome, cargo,  telefone, senha,  cidade } = req.body
 
     //criando validações
     
@@ -29,34 +29,34 @@ router.post('/cadastrar', async (req, res) => { //pq vou enviar dados
         return
     }
 
-    //data de nascimento
-    if (!dtNasc) {
-        res.status(400).json({ error: 'É obrigatorio informar a idade' }) //quando o recurso nao foi criado com sucesso
-        return
-    }
-    else{
-        var dataAtual = new Date()
+    // //data de nascimento
+    // if (!dtNasc) {
+    //     res.status(400).json({ error: 'É obrigatorio informar a idade' }) //quando o recurso nao foi criado com sucesso
+    //     return
+    // }
+    // else{
+    //     var dataAtual = new Date()
 
-        var dataUser = new Date(dtNasc)
+    //     var dataUser = new Date(dtNasc)
 
-        var verificaIdade = verificaIdades(dataUser)
+    //     var verificaIdade = verificaIdades(dataUser)
 
-        function verificaIdades(dataUser = new Date()) {
-            var dataAtual = new Date()
-            if ((dataAtual.getFullYear() - dataUser.getFullYear() == 18)) {
-                if ((dataUser.getMonth() + 1) >= (dataAtual.getMonth() + 1)) {
-                    if ((dataUser.getDate() > dataAtual.getDate())) {
-                        res.status(400).json({ error: 'O funcionario nao pode ser menor de idade' })
-                        return
-                    }
+    //     function verificaIdades(dataUser = new Date()) {
+    //         var dataAtual = new Date()
+    //         if ((dataAtual.getFullYear() - dataUser.getFullYear() == 18)) {
+    //             if ((dataUser.getMonth() + 1) >= (dataAtual.getMonth() + 1)) {
+    //                 if ((dataUser.getDate() > dataAtual.getDate())) {
+    //                     res.status(400).json({ error: 'O funcionario nao pode ser menor de idade' })
+    //                     return
+    //                 }
                     
-                }
-            } else if ((dataAtual.getFullYear() - dataUser.getFullYear() < 18)) {
-                res.status(400).json({ error: 'O funcionario nao pode ser menor de idade' })
-                return
-            }
-        }
-    }
+    //             }
+    //         } else if ((dataAtual.getFullYear() - dataUser.getFullYear() < 18)) {
+    //             res.status(400).json({ error: 'O funcionario nao pode ser menor de idade' })
+    //             return
+    //         }
+    //     }
+    // }
 
     //telefone utlizo uma biblioteca para validar o telefone
     // if(!validator(telefone) ){
@@ -70,16 +70,16 @@ router.post('/cadastrar', async (req, res) => { //pq vou enviar dados
     }
     
     //cep
-    if(!cep){
-        res.status(400).json({ error: 'É obrigatorio um cep válido!' })
-        return
-    }
+    // if(!cep){
+    //     res.status(400).json({ error: 'É obrigatorio um cep válido!' })
+    //     return
+    // }
 
     //bairro
-    if(!bairro){
-        res.status(400).json({ error: 'É obrigatorio escre' })
-        return
-    }
+    // if(!bairro){
+    //     res.status(400).json({ error: 'É obrigatorio escre' })
+    //     return
+    // }
     
 
 
@@ -94,23 +94,32 @@ router.post('/cadastrar', async (req, res) => { //pq vou enviar dados
     let nomeCompleto = nome.split(" ")
     let login = `${nomeCompleto[0]}.${nomeCompleto[1]}`
 
-    let endereco = {
-        cep,
-        rua,
-        numero,
-        bairro,
-        cidade,
-        estado
-    }
+    // let endereco = {
+    //     cep,
+    //     rua,
+    //     numero,
+    //     bairro,
+    //     cidade,
+    //     estado
+    // }
+
+    // const funcionario = {
+    //     nome,
+    //     cargo,
+    //     dtNasc,
+    //     telefone,
+    //     senha,
+    //     login,
+    //     endereco
+    // }
 
     const funcionario = {
         nome,
         cargo,
-        dtNasc,
+        cidade,
         telefone,
         senha,
-        login,
-        endereco
+        login, 
     }
 
     //adicionando uma entidade ao meu banco de dados
@@ -168,21 +177,25 @@ router.get('/funcionarios/:id', async(req, res) =>{ //buscar funcionarios pelo i
 
 //login do usuario
 router.post('/login', async (req, res) => { 
-    console.log("entrou no Login")
+    // console.log("entrou no Login")
 
      //pego a senha e o login inserido pelo usuario
     const {login, senha} = req.body
    
+    console.log(login)
+    console.log(senha)
     //busco no meu banco o login que foi cadastrado anteriormente pelo usuario
     const funcionario = await Funcionario.findOne({login}).select('+senha')
 
     //faço a validação pra ve se existe o funcionario
     if(!funcionario){
+        console.log("usuario nao encontrado")
         return res.status(400).json({message: "Funcionario nao encontrado"})
     }
 
     //verifico se a senha digitada pelo funcionario é diferente do que esta no banco
     if(await senha != funcionario.senha){
+        console.log("senha incorreta")
         return res.status(400).json({message: "Senha Invalida"})
     }
 
